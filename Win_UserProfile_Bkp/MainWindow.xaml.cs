@@ -24,11 +24,20 @@ namespace Win_UserProfile_Bkp
         {
             InitializeComponent();
 
-            string dirForCalc = "C:\\temp";
+            // TODO:
+            // "C:\\users\\unknown\\AppData\\Roaming\\";
+            // "C:\\users\\unknown\\AppData\\Local\\"
+            // "C:\\users\\unknown\\Desktop\\"
+            // "C:\\users\\unknown\\Documents\\"
+            // "C:\\users\\unknown\\Downloads\\"
 
-            float rezSize = new DirSizeCalculate(dirForCalc).Rezult;
+            // ADD Win XP & others ...
 
-            MessageBox.Show(Math.Round((rezSize/1024/1024), 2).ToString() + " MB. (" + rezSize.ToString() + ")");
+            string dirForCalc = "C:\\temp\\";
+
+            List<Folder> list = GetFoldersList(dirForCalc);
+
+            dataGrid.ItemsSource = GetFoldersList(dirForCalc);
         }
 
 
@@ -42,10 +51,19 @@ namespace Win_UserProfile_Bkp
 
         // 3. Get Dirs From AD & LS_AD 
 
-        //private List<Folder> GetFoldersList(string profileRoot)
-        //{
+        private List<Folder> GetFoldersList(string startDir)
+        {
+            List<Folder> folders = new List<Folder>();
 
-        //}
+            string[] dirs = Directory.GetDirectories(startDir);
+
+            foreach (string d in dirs)
+            {
+                folders.Add(new Folder(d));
+            }
+
+            return folders;
+        }
 
         // 4. Use Exclusion-List for previous Step + ability to ADD
 

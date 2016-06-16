@@ -7,6 +7,14 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        
+        <DataGrid x:Name="dataGrid" Margin="10,10,10,100" BorderThickness="3">
+            <DataGrid.Columns>
+                
+                <!--<DataGridTextColumn Binding="{Binding StartDate, StringFormat=\{0:dd.MM.yy HH:mm:ss\}}" />-->
+                
+                <DataGridTextColumn Binding="{Binding Created, StringFormat=\{0:dd.MM.yy HH:mm:ss\}}"></DataGridTextColumn>
+                
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>
