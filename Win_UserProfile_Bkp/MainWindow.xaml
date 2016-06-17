@@ -5,16 +5,34 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Win_UserProfile_Bkp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="516.7" Width="740" Icon="ItsMe.ico">
     <Grid>
-        <DataGrid x:Name="dataGrid" Margin="10,10,10,100" BorderThickness="3">
+        <DataGrid x:Name="dataGrid" Margin="10,10,10,40" BorderThickness="3" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                
-                <!--<DataGridTextColumn Binding="{Binding StartDate, StringFormat=\{0:dd.MM.yy HH:mm:ss\}}" />-->
-                
-                <DataGridTextColumn Binding="{Binding Created, StringFormat=\{0:dd.MM.yy HH:mm:ss\}}"></DataGridTextColumn>
-                
+
+                <DataGridTextColumn Header="Размер (МВ)" Binding="{Binding SizeMB}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Right" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+
+                <DataGridCheckBoxColumn Header="Бэкап" Binding="{Binding Selected}" />
+
+                <DataGridTextColumn Header="Папка" Binding="{Binding Name}" />
+
+                <DataGridTextColumn Header="Создана" Binding="{Binding Created, StringFormat=\{0:dd.MM.yy\}}" />
+
+                <DataGridTextColumn Header="Изменена" Binding="{Binding Modified, StringFormat=\{0:dd.MM.yy\}}" />
+
+                <DataGridTextColumn Header="Полный путь" Binding="{Binding Path}" />
+
             </DataGrid.Columns>
         </DataGrid>
+        <Button x:Name="btnSelectAll" Content="Выбрать все" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Bottom" Width="81" Click="btnSelectAll_Click"/>
+        <Button x:Name="btnStartBkp" Content="Создать Резервнцую копию" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="165"/>
+        <Button x:Name="btnSelectPath" Content="Выбрать путь сохранения" HorizontalAlignment="Right" Margin="0,0,185,10" VerticalAlignment="Bottom" Width="150" RenderTransformOrigin="-0.156,0.417" Click="btnSelectPath_Click"/>
+        <Label x:Name="lblSelectedPath" Content="        !!! Выберите путь для сохранения !!!" Margin="96,0,340,7" VerticalAlignment="Bottom"/>
     </Grid>
 </Window>

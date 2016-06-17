@@ -8,9 +8,9 @@ namespace Win_UserProfile_Bkp
 {
     class DirSizeCalculate
     {
-        private float fullSize = 0;
+        private double fullSize = 0;
 
-        public float Rezult { get; }
+        public double Rezult { get; }
 
         public DirSizeCalculate(string dir)
         {
@@ -19,7 +19,7 @@ namespace Win_UserProfile_Bkp
             Rezult = fullSize;
         }
 
-        private float GetDirectorySize(string dir)
+        private double GetDirectorySize(string dir)
         {
             string[] files = Directory.GetFiles(dir, "*.*");
 

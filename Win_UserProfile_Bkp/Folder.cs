@@ -8,14 +8,13 @@ namespace Win_UserProfile_Bkp
 {
     class Folder
     {
-        public int ID { get; }
-        public bool Selected { get; set; }
-        //public float Size { get; }
-        public string Size { get; }
+        //public int ID { get; }
         public string Name { get; }
+        public string Path { get; }
         public DateTime Created { get; }
         public DateTime Modified { get; }
-        public string Path { get; }
+        public bool Selected { get; set; }
+        public double SizeMB { get; }
 
         public Folder(string dirPath)
         {
@@ -25,7 +24,7 @@ namespace Win_UserProfile_Bkp
             Name = d.Name;
             Path = d.FullName;
             Selected = false;
-            Size = Math.Round((new DirSizeCalculate(d.FullName).Rezult / 1024 / 1024), 2).ToString() + " MB.";
+            SizeMB = Math.Round((new DirSizeCalculate(d.FullName).Rezult / 1024 / 1024), 2);
         }
     }
 }
