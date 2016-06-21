@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -22,6 +23,8 @@ namespace Win_UserProfile_Bkp
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static string bkpPath = "";
+
         public MainWindow()
         {
             InitializeComponent();
@@ -52,9 +55,10 @@ namespace Win_UserProfile_Bkp
             return new string[] {
                 // Environment.GetEnvironmentVariable("ALLUSERSPROFILE"),
                 Environment.GetEnvironmentVariable("APPDATA"),
+                
 #if !DEBUG
                 //Environment.GetEnvironmentVariable("USERPROFILE") + "\\Мои документы",
-                Environment.GetEnvironmentVariable("USERPROFILE") + "\\Рабочий стол",
+                // Environment.GetEnvironmentVariable("USERPROFILE") + "\\Рабочий стол",
                 Environment.GetEnvironmentVariable("USERPROFILE") +
                     "\\Local Settings\\Application Data"
 #endif
@@ -90,22 +94,20 @@ namespace Win_UserProfile_Bkp
                     }
                 }
             }
+            foldersList.Add(new Folder(Environment.GetFolderPath(Environment.SpecialFolder.Desktop)));
+
             return foldersList;
         }
 
 
         private void btnSelectAll_Click(object sender, RoutedEventArgs e)
         {
-            foreach (var item in dataGrid.ItemsSource)
+            foreach (Folder item in dataGrid.ItemsSource)
             {
-                ((Folder)item).Selected = true;
-
+                item.Selected = true;
                 dataGrid.Items.Refresh();
             }
-
-
         }
-
 
 
         // 4. Use Exclusion-List for previous Step + ability to ADD
@@ -161,12 +163,68 @@ namespace Win_UserProfile_Bkp
                     string path = foldBrowsDlg.SelectedPath;
 
                     lblSelectedPath.Content = path;
+
+                    bkpPath = path;
+
+                    btnStartBkp.Visibility = Visibility.Visible;
                 }
             }
             catch (Exception exc)
             {
                 MessageBox.Show(exc.Message);
             }
+        }
+
+
+        private void btnStartBkp_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (Folder item in dataGrid.ItemsSource)
+            {
+                if (item.Selected)
+                {
+                    if (BkpThis(item.Name, item.Path))
+                    {
+                        item.Selected = false;
+                        //MessageBox.Show(item.Name + " saved from " + item.Path);
+                        dataGrid.Items.Refresh();
+                    }
+                    else
+                    {
+                        MessageBox.Show(item.Name + " NOT saved from " + item.Path);
+                    }
+                    dataGrid.Items.Refresh();
+                }
+            }
+            Process.Start(bkpPath);
+        }
+
+
+        private bool BkpThis(string name, string path)
+        {
+            bool successful = false;
+            try
+            {
+                ProcessStartInfo psi = new ProcessStartInfo(@"C:\Progra~1\WinRAR\Rar.exe");
+
+                // -m0: compressLevel, -rr5p: recovery5%, -t: testingAfter, -dh: compressSharedFiles
+#if DEBUG
+                psi.Arguments = " u -m0 -rr5p -r -t -dh \"" +
+#else
+                psi.Arguments = " m[f] -m0 -rr5p -r -t -dh \"" +
+#endif
+                bkpPath + "\\" + name.Replace(' ', '_') + ".RAR\" " + "\"" + path + "\\*.*\"";
+
+                Process.Start(psi).WaitForExit();
+
+                successful = true;
+
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
+
+            return successful;
         }
     }
 }
